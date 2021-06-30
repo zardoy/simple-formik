@@ -41,7 +41,8 @@ const useSimpleFormik = ({ initialValues, onSubmit }) => {
         setValue(name, value) {
             //@ts-ignore
             updateValue(name, value);
-        }
+        },
+        disableSubmitButton: Object.entries(values).some(([, val]) => !val)
     };
 };
 exports.useSimpleFormik = useSimpleFormik;

@@ -1,17 +1,14 @@
 {
-  "name": "ink-inline-progress-bar",
+  "name": "@zardoy/simple-formik",
   "version": "0.0.1",
   "main": "./index.js",
   "types": "./index.d.ts",
-  "repository": "https://github.com/zardoy/ink-progress-bar.git",
+  "repository": "https://github.com/zardoy/simple-formik.git",
   "author": "Vitaly Turovsky <vital2580@icloud.com>",
   "license": "MIT",
   "files": [
     "build"
   ],
-  "engines": {
-    "node": ">=12"
-  },
   "scripts": {
     "prepublishOnly": "tsc && node scripts/prepare-package-json.mjs"
   },
