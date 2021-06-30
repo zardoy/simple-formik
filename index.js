@@ -29,20 +29,19 @@ const useSimpleFormik = ({ initialValues, onSubmit }) => {
             e.preventDefault();
             onSubmit(values);
         },
-        handleInput: new Proxy({}, {
-            get(_t, name) {
-                return () => ({
-                    value: values[name],
-                    onChange: e => updateValue(name, e.target.value)
-                });
-            }
-        }),
+        handleInput(name) {
+            return {
+                value: values[name],
+                //@ts-ignore
+                onChange: e => updateValue(name, e.target.value)
+            };
+        },
         values,
         setValue(name, value) {
             //@ts-ignore
             updateValue(name, value);
         },
-        disableSubmitButton: Object.entries(values).some(([, val]) => !val)
+        submitButtonDisabled: Object.entries(values).some(([, val]) => !val)
     };
 };
 exports.useSimpleFormik = useSimpleFormik;
