@@ -13,10 +13,10 @@ type Options<T extends UV> = {
 
 type Return<T extends UV> = Readonly<{
     handleSubmit: Exclude<React.ComponentProps<"form">["onSubmit"], undefined>
-    handleInput: Record<keyof T, (options: HandleOptions) => Pick<React.ComponentProps<"input">, "value" | "onChange">>
+    handleInput: (name: keyof T, options?: HandleOptions) => Pick<React.ComponentProps<"input">, "value" | "onChange">
     values: T
     setValue: <K extends keyof T>(name: K, value: T[K]) => void
-    disableSubmitButton: boolean
+    submitButtonDisabled: boolean
 }>
 
 export const useSimpleFormik = <T extends UV>({ initialValues, onSubmit }: Options<T>): Return<T> => {
@@ -30,19 +30,18 @@ export const useSimpleFormik = <T extends UV>({ initialValues, onSubmit }: Optio
             e.preventDefault()
             onSubmit(values)
         },
-        handleInput: new Proxy({} as Return<T>["handleInput"], {
-            get(_t, name: string): Return<Record<string, string>>["handleInput"][string] {
-                return () => ({
-                    value: values[name],
-                    onChange: e => updateValue(name, e.target.value)
-                })
+        handleInput(name) {
+            return {
+                value: values[name],
+                //@ts-ignore
+                onChange: e => updateValue(name, e.target.value)
             }
-        }),
+        },
         values,
         setValue(name, value) {
             //@ts-ignore
             updateValue(name, value)
         },
-        disableSubmitButton: Object.entries(values).some(([, val]) => !val)
+        submitButtonDisabled: Object.entries(values).some(([, val]) => !val)
     }
 }
