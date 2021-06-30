@@ -7,6 +7,8 @@ type HandleOptions = {}
 type Options<T extends UV> = {
     initialValues: T
     onSubmit: (values: T) => void
+    /** All fields are required, if some of them isn't filled, `disableSubmitButton` will be `false` */
+    allRequired: true
 }
 
 type Return<T extends UV> = Readonly<{
@@ -14,6 +16,7 @@ type Return<T extends UV> = Readonly<{
     handleInput: Record<keyof T, (options: HandleOptions) => Pick<React.ComponentProps<"input">, "value" | "onChange">>
     values: T
     setValue: <K extends keyof T>(name: K, value: T[K]) => void
+    disableSubmitButton: boolean
 }>
 
 export const useSimpleFormik = <T extends UV>({ initialValues, onSubmit }: Options<T>): Return<T> => {
@@ -39,6 +42,7 @@ export const useSimpleFormik = <T extends UV>({ initialValues, onSubmit }: Optio
         setValue(name, value) {
             //@ts-ignore
             updateValue(name, value)
-        }
+        },
+        disableSubmitButton: Object.entries(values).some(([, val]) => !val)
     }
 }
