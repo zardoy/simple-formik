@@ -12,11 +12,11 @@ type Options<T extends UV> = {
 }
 
 type Return<T extends UV> = Readonly<{
-    handleSubmit: Exclude<React.ComponentProps<"form">["onSubmit"], undefined>
+    handleForm: Pick<React.ComponentProps<"form">, "onSubmit">
     handleInput: (name: keyof T, options?: HandleOptions) => Pick<React.ComponentProps<"input">, "value" | "onChange">
     values: T
     setValue: <K extends keyof T>(name: K, value: T[K]) => void
-    submitButtonDisabled: boolean
+    handleButton: { type: "submit", disabled: boolean }
 }>
 
 export const useSimpleFormik = <T extends UV>({ initialValues, onSubmit }: Options<T>): Return<T> => {
@@ -26,9 +26,11 @@ export const useSimpleFormik = <T extends UV>({ initialValues, onSubmit }: Optio
         setValues(val => ({ ...val, [name]: value })), [])
 
     return {
-        handleSubmit(e) {
-            e.preventDefault()
-            onSubmit(values)
+        handleForm: {
+            onSubmit(e) {
+                e.preventDefault()
+                onSubmit(values)
+            }
         },
         handleInput(name) {
             return {
@@ -39,9 +41,12 @@ export const useSimpleFormik = <T extends UV>({ initialValues, onSubmit }: Optio
         },
         values,
         setValue(name, value) {
-            //@ts-ignore
+            //@ts-expect-error what? symbol?
             updateValue(name, value)
         },
-        submitButtonDisabled: Object.entries(values).some(([, val]) => !val)
+        handleButton: {
+            type: "submit",
+            disabled: Object.entries(values).some(([, val]) => !val)
+        }
     }
 }
