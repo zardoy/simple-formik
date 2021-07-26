@@ -8,17 +8,23 @@ declare type Options<T extends UV> = {
     allRequired: true;
 };
 declare type Return<T extends UV> = Readonly<{
-    handleSubmit: Exclude<React.ComponentProps<"form">["onSubmit"], undefined>;
+    handleForm: Pick<React.ComponentProps<"form">, "onSubmit">;
     handleInput: (name: keyof T, options?: HandleOptions) => Pick<React.ComponentProps<"input">, "value" | "onChange">;
     values: T;
     setValue: <K extends keyof T>(name: K, value: T[K]) => void;
-    submitButtonDisabled: boolean;
+    handleButton: {
+        type: "submit";
+        disabled: boolean;
+    };
 }>;
 export declare const useSimpleFormik: <T extends UV>({ initialValues, onSubmit }: Options<T>) => Readonly<{
-    handleSubmit: Exclude<React.ComponentProps<"form">["onSubmit"], undefined>;
+    handleForm: Pick<React.ComponentProps<"form">, "onSubmit">;
     handleInput: (name: keyof T, options?: HandleOptions | undefined) => Pick<React.ComponentProps<"input">, "value" | "onChange">;
     values: T;
     setValue: <K extends keyof T>(name: K, value: T[K]) => void;
-    submitButtonDisabled: boolean;
+    handleButton: {
+        type: "submit";
+        disabled: boolean;
+    };
 }>;
 export {};

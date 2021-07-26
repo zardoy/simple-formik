@@ -25,9 +25,11 @@ const useSimpleFormik = ({ initialValues, onSubmit }) => {
     const [values, setValues] = react_1.default.useState(initialValues);
     const updateValue = react_1.useCallback((name, value) => setValues(val => ({ ...val, [name]: value })), []);
     return {
-        handleSubmit(e) {
-            e.preventDefault();
-            onSubmit(values);
+        handleForm: {
+            onSubmit(e) {
+                e.preventDefault();
+                onSubmit(values);
+            }
         },
         handleInput(name) {
             return {
@@ -38,10 +40,13 @@ const useSimpleFormik = ({ initialValues, onSubmit }) => {
         },
         values,
         setValue(name, value) {
-            //@ts-ignore
+            //@ts-expect-error what? symbol?
             updateValue(name, value);
         },
-        submitButtonDisabled: Object.entries(values).some(([, val]) => !val)
+        handleButton: {
+            type: "submit",
+            disabled: Object.entries(values).some(([, val]) => !val)
+        }
     };
 };
 exports.useSimpleFormik = useSimpleFormik;
